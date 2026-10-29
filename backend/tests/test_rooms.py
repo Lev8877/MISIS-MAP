@@ -6,6 +6,14 @@ def test_get_rooms_by_floor(client):
     assert numbers == ['Б-201', 'Б-202', 'Б-203']
 
 
+def test_get_room(client):
+    response = client.get('/rooms/6')
+
+    assert response.status_code == 200, response.json()
+    assert response.json()['number'] == 'Б-202'
+    assert response.json()['room_type'] == {'name': 'Лаборатория', 'category': 'Учебные'}
+
+
 def test_get_room_not_found(client):
     response = client.get('/rooms/9999')
 

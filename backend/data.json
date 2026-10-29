@@ -1,0 +1,57 @@
+{
+    "room_types": [
+        {"name": "Аудитория", "category": "Учебные"},
+        {"name": "Лаборатория", "category": "Учебные"},
+        {"name": "Буфет", "category": "Питание"},
+        {"name": "Туалет", "category": "Санузлы"},
+        {"name": "Кабинет", "category": "Администрация"}
+    ],
+    "floors": [
+        {"building": "Б", "number": 1, "name": "1 этаж", "plan_url": "plans/b_1.svg"},
+        {"building": "Б", "number": 2, "name": "2 этаж", "plan_url": "plans/b_2.svg"}
+    ],
+    "rooms": [
+        {"number": "Б-101", "name": "Аудитория", "type": "Аудитория", "building": "Б", "floor": 1, "area": 60, "capacity": 40},
+        {"number": "Б-102", "name": "Компьютерный класс", "type": "Аудитория", "building": "Б", "floor": 1, "area": 50, "capacity": 25},
+        {"number": "Б-103", "name": "Буфет", "type": "Буфет", "building": "Б", "floor": 1, "area": 80, "capacity": 30},
+        {"number": "Б-104", "name": "Туалет", "type": "Туалет", "building": "Б", "floor": 1, "area": 15, "capacity": null},
+        {"number": "Б-201", "name": "Лекционная аудитория", "type": "Аудитория", "building": "Б", "floor": 2, "area": 120, "capacity": 100},
+        {"number": "Б-202", "name": "Лаборатория физики", "type": "Лаборатория", "building": "Б", "floor": 2, "area": 70, "capacity": 20},
+        {"number": "Б-203", "name": "Деканат", "type": "Кабинет", "building": "Б", "floor": 2, "area": 30, "capacity": null}
+    ],
+    "nodes": [
+        {"code": "b1_101", "building": "Б", "floor": 1, "room": "Б-101", "x": 100, "y": 250, "description": "Дверь Б-101"},
+        {"code": "b1_102", "building": "Б", "floor": 1, "room": "Б-102", "x": 300, "y": 250, "description": "Дверь Б-102"},
+        {"code": "b1_103", "building": "Б", "floor": 1, "room": "Б-103", "x": 500, "y": 350, "description": "Дверь Б-103"},
+        {"code": "b1_104", "building": "Б", "floor": 1, "room": "Б-104", "x": 700, "y": 350, "description": "Дверь Б-104"},
+        {"code": "b1_corridor_1", "building": "Б", "floor": 1, "room": null, "x": 100, "y": 300, "description": "Коридор"},
+        {"code": "b1_corridor_2", "building": "Б", "floor": 1, "room": null, "x": 300, "y": 300, "description": "Коридор"},
+        {"code": "b1_corridor_3", "building": "Б", "floor": 1, "room": null, "x": 500, "y": 300, "description": "Коридор"},
+        {"code": "b1_corridor_4", "building": "Б", "floor": 1, "room": null, "x": 700, "y": 300, "description": "Коридор"},
+        {"code": "b1_stairs", "building": "Б", "floor": 1, "room": null, "x": 800, "y": 300, "description": "Лестница"},
+        {"code": "b2_stairs", "building": "Б", "floor": 2, "room": null, "x": 800, "y": 300, "description": "Лестница"},
+        {"code": "b2_corridor_1", "building": "Б", "floor": 2, "room": null, "x": 700, "y": 300, "description": "Коридор"},
+        {"code": "b2_corridor_2", "building": "Б", "floor": 2, "room": null, "x": 400, "y": 300, "description": "Коридор"},
+        {"code": "b2_corridor_3", "building": "Б", "floor": 2, "room": null, "x": 100, "y": 300, "description": "Коридор"},
+        {"code": "b2_201", "building": "Б", "floor": 2, "room": "Б-201", "x": 100, "y": 250, "description": "Дверь Б-201"},
+        {"code": "b2_202", "building": "Б", "floor": 2, "room": "Б-202", "x": 400, "y": 350, "description": "Дверь Б-202"},
+        {"code": "b2_203", "building": "Б", "floor": 2, "room": "Б-203", "x": 700, "y": 250, "description": "Дверь Б-203"}
+    ],
+    "edges": [
+        {"from": "b1_101", "to": "b1_corridor_1", "length": 5, "type": "door"},
+        {"from": "b1_102", "to": "b1_corridor_2", "length": 5, "type": "door"},
+        {"from": "b1_103", "to": "b1_corridor_3", "length": 5, "type": "door"},
+        {"from": "b1_104", "to": "b1_corridor_4", "length": 5, "type": "door"},
+        {"from": "b1_corridor_1", "to": "b1_corridor_2", "length": 20, "type": "corridor"},
+        {"from": "b1_corridor_2", "to": "b1_corridor_3", "length": 20, "type": "corridor"},
+        {"from": "b1_corridor_3", "to": "b1_corridor_4", "length": 20, "type": "corridor"},
+        {"from": "b1_corridor_4", "to": "b1_stairs", "length": 10, "type": "corridor"},
+        {"from": "b1_stairs", "to": "b2_stairs", "length": 15, "type": "stairs"},
+        {"from": "b2_stairs", "to": "b2_corridor_1", "length": 10, "type": "corridor"},
+        {"from": "b2_corridor_1", "to": "b2_corridor_2", "length": 30, "type": "corridor"},
+        {"from": "b2_corridor_2", "to": "b2_corridor_3", "length": 30, "type": "corridor"},
+        {"from": "b2_corridor_3", "to": "b2_201", "length": 5, "type": "door"},
+        {"from": "b2_corridor_2", "to": "b2_202", "length": 5, "type": "door"},
+        {"from": "b2_corridor_1", "to": "b2_203", "length": 5, "type": "door"}
+    ]
+}

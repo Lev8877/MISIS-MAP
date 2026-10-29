@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class NodeData(BaseModel):
@@ -6,6 +6,8 @@ class NodeData(BaseModel):
     floor_id: int
     x: float
     y: float
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class GetRouteResponse(BaseModel):

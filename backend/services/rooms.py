@@ -1,30 +1,43 @@
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, or_
+
 from fastapi import HTTPException
 
-from fake_data import ROOMS
+from models.rooms import Room
 
 
-async def get_rooms(floor_id: int | None):
-    rooms = ROOMS
+async def get_rooms(session: AsyncSession, floor_id: int | None):
+    statement = select(Room)
 
     if floor_id is not None:
-        rooms = [room for room in ROOMS if room['floor_id'] == floor_id]
+        statement = statement.where(Room.floor_id == floor_id)
+
+    statement = statement.order_by(Room.number)
+
+    result = await session.execute(statement)
+    rooms = result.scalars().all()
 
     return {
         'rooms': rooms
     }
 
 
-async def get_room(room_id: int):
-    for room in ROOMS:
-        if room['id'] == room_id:
-            return room
+async def get_room(session: AsyncSession, room_id: int):
+    result = await session.execute(select(Room).where(Room.id == room_id))
+    room = result.scalar_one_or_none()
 
-    raise HTTPException(status_code=404, detail='Room is not found')
+    if room is None:
+        raise HTTPException(status_code=404, detail='Room is not found')
+
+    return room
 
 
-async def search_rooms(query: str):
-    query = query.lower()
-    rooms = [room for room in ROOMS if query in room['number'].lower() or query in room['name'].lower()]
+async def search_rooms(session: AsyncSession, query: str):
+    statement = select(Room).where(or_(Room.number.ilike(f'%{query}%'), Room.name.ilike(f'%{query}%')))
+    statement = statement.order_by(Room.number)
+
+    result = await session.execute(statement)
+    rooms = result.scalars().all()
 
     return {
         'rooms': rooms

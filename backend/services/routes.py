@@ -1,36 +1,49 @@
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+
 from fastapi import HTTPException
 
-from fake_data import NODES, EDGES
+from models.graph_nodes import GraphNode
+from models.graph_edges import GraphEdge
 
 from graph import Graph
 
-from services.rooms import get_room
+
+async def get_room_node(session: AsyncSession, room_id: int):
+    result = await session.execute(select(GraphNode).where(GraphNode.room_id == room_id))
+    node = result.scalar_one_or_none()
+
+    if node is None:
+        raise HTTPException(status_code=404, detail='Room is not found on the map')
+
+    return node
 
 
-def build_graph():
+async def get_route(session: AsyncSession, from_room_id: int, to_room_id: int):
+    from_node = await get_room_node(session=session, room_id=from_room_id)
+    to_node = await get_room_node(session=session, room_id=to_room_id)
+
+    nodes_result = await session.execute(select(GraphNode))
+    nodes = nodes_result.scalars().all()
+
+    edges_result = await session.execute(select(GraphEdge))
+    edges = edges_result.scalars().all()
+
     graph = Graph()
 
-    for node in NODES:
-        graph.add_node(node['id'])
+    for node in nodes:
+        graph.add_node(node.id)
 
-    for edge in EDGES:
-        graph.add_edge(edge['from_node_id'], edge['to_node_id'], edge['length'])
+    for edge in edges:
+        graph.add_edge(edge.node_from_id, edge.node_to_id, edge.length_meters)
 
-    return graph
-
-
-async def get_route(from_room_id: int, to_room_id: int):
-    from_room = await get_room(from_room_id)
-    to_room = await get_room(to_room_id)
-
-    graph = build_graph()
-    result = graph.shortest_path(from_room['node_id'], to_room['node_id'])
+    result = graph.shortest_path(from_node.id, to_node.id)
 
     if result is None:
         raise HTTPException(status_code=404, detail='Route is not found')
 
     path, distance = result
-    nodes_by_id = {node['id']: node for node in NODES}
+    nodes_by_id = {node.id: node for node in nodes}
 
     return {
         'distance': distance,
